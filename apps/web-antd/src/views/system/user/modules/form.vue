@@ -3,7 +3,7 @@ import type { DataNode } from 'ant-design-vue/es/tree';
 
 import type { Recordable } from '@vben/types';
 
-import type { SystemUserApi } from '#/api/system/user';
+import type { SystemUserApi } from '../api';
 
 import { computed, nextTick, ref } from 'vue';
 
@@ -13,11 +13,10 @@ import { IconifyIcon } from '@vben/icons';
 import { Spin } from 'ant-design-vue';
 
 import { useVbenForm } from '#/adapter/form';
-import { getMenuList } from '#/api/system/menu';
-import { createUser, updateUser } from '#/api/system/user';
-import { $t } from '#/locales';
 
-import { useFormSchema } from '../data';
+import { getMenuList } from '../../menu/api';
+import { createUser, updateUser } from '../api';
+import { useFormSchema } from '../config';
 
 const emits = defineEmits(['success']);
 
@@ -83,9 +82,7 @@ async function loadPermissions() {
 }
 
 const getDrawerTitle = computed(() => {
-  return formData.value?.id
-    ? $t('common.edit', $t('system.user.name'))
-    : $t('common.create', $t('system.user.name'));
+  return formData.value?.id ? '修改用户名' : '新增用户名';
 });
 
 function getNodeClass(node: Recordable<any>) {
@@ -115,7 +112,7 @@ function getNodeClass(node: Recordable<any>) {
           >
             <template #node="{ value }">
               <IconifyIcon v-if="value.meta.icon" :icon="value.meta.icon" />
-              {{ $t(value.meta.title) }}
+              {{ value.meta.title }}
             </template>
           </Tree>
         </Spin>

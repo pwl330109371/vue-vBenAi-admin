@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { SystemDeptApi } from '#/api/system/dept';
+import type { SystemDeptApi } from '../api';
 
 import { computed, ref } from 'vue';
 
@@ -8,10 +8,10 @@ import { useVbenModal } from '@vben/common-ui';
 import { Button } from 'antdv-next';
 
 import { useVbenForm } from '#/adapter/form';
-import { createDept, updateDept } from '#/api/system/dept';
 import { $t } from '#/locales';
 
-import { useSchema } from '../data';
+import { createDept, updateDept } from '../api';
+import { useSchema } from '../config';
 
 const emit = defineEmits(['success']);
 const formData = ref<SystemDeptApi.SystemDept>();

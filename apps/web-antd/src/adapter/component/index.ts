@@ -363,7 +363,7 @@ function cropImage(file: File, aspectRatio: string | undefined) {
               keyboard: false,
               maskClosable: false,
               closable: false,
-              cancelText: $t('common.cancel'),
+              cancelText: '取消',
               okText: $t('ui.crop.confirm'),
               destroyOnClose: true,
               onOk: async () => {

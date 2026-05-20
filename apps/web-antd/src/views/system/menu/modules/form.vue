@@ -7,12 +7,13 @@ import { computed, h, ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
 import { IconifyIcon } from '@vben/icons';
-import { $te } from '@vben/locales';
 import { getPopupContainer } from '@vben/utils';
 
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 
 import { useVbenForm, z } from '#/adapter/form';
+import { componentKeys } from '#/router/routes';
+
 import {
   createMenu,
   getMenuList,
@@ -20,11 +21,8 @@ import {
   isMenuPathExists,
   SystemMenuApi,
   updateMenu,
-} from '#/api/system/menu';
-import { $t } from '#/locales';
-import { componentKeys } from '#/router/routes';
-
-import { getMenuTypeOptions } from '../data';
+} from '../api';
+import { getMenuTypeOptions } from '../config';
 
 const emit = defineEmits<{
   success: [];
@@ -42,25 +40,22 @@ const schema: VbenFormSchema[] = [
     defaultValue: 'menu',
     fieldName: 'type',
     formItemClass: 'col-span-2 md:col-span-2',
-    label: $t('system.menu.type'),
+    label: '类型',
   },
   {
     component: 'Input',
     fieldName: 'name',
-    label: $t('system.menu.menuName'),
+    label: '菜单名称',
     rules: z
       .string()
-      .min(2, $t('ui.formRules.minLength', [$t('system.menu.menuName'), 2]))
-      .max(30, $t('ui.formRules.maxLength', [$t('system.menu.menuName'), 30]))
+      .min(2, '菜单名称至少2个字符')
+      .max(30, '菜单名称最多30个字符')
       .refine(
         async (value: string) => {
           return !(await isMenuNameExists(value, formData.value?.id));
         },
         (value) => ({
-          message: $t('ui.formRules.alreadyExists', [
-            $t('system.menu.menuName'),
-            value,
-          ]),
+          message: `菜单名称 \`${value}\` 已存在`,
         }),
       ),
   },
@@ -75,7 +70,7 @@ const schema: VbenFormSchema[] = [
         }
         const title: string = node.meta?.title ?? '';
         if (!title) return false;
-        return title.includes(input) || $t(title).includes(input);
+        return title.includes(input);
       },
       getPopupContainer,
       labelField: 'meta.title',
@@ -85,7 +80,7 @@ const schema: VbenFormSchema[] = [
       childrenField: 'children',
     },
     fieldName: 'pid',
-    label: $t('system.menu.parent'),
+    label: '上级菜单',
     renderComponentContent() {
       return {
         title({ label, meta }: { label: string; meta: Recordable<any> }) {
@@ -94,7 +89,7 @@ const schema: VbenFormSchema[] = [
           if (meta?.icon) {
             coms.push(h(IconifyIcon, { class: 'size-4', icon: meta.icon }));
           }
-          coms.push(h('span', { class: '' }, $t(label || '')));
+          coms.push(h('span', { class: '' }, label || ''));
           return h('div', { class: 'flex items-center gap-1' }, coms);
         },
       };
@@ -107,12 +102,12 @@ const schema: VbenFormSchema[] = [
       return {
         ...(titleSuffix.value && { addonAfter: titleSuffix.value }),
         onChange({ target: { value } }: { target: { value: string } }) {
-          titleSuffix.value = value && $te(value) ? $t(value) : undefined;
+          titleSuffix.value = value || undefined;
         },
       };
     },
     fieldName: 'meta.title',
-    label: $t('system.menu.menuTitle'),
+    label: '标题',
     rules: 'required',
   },
   {
@@ -124,26 +119,20 @@ const schema: VbenFormSchema[] = [
       triggerFields: ['type'],
     },
     fieldName: 'path',
-    label: $t('system.menu.path'),
+    label: '路由地址',
     rules: z
       .string()
-      .min(2, $t('ui.formRules.minLength', [$t('system.menu.path'), 2]))
-      .max(100, $t('ui.formRules.maxLength', [$t('system.menu.path'), 100]))
-      .refine(
-        (value: string) => {
-          return value.startsWith('/');
-        },
-        $t('ui.formRules.startWith', [$t('system.menu.path'), '/']),
-      )
+      .min(2, '路由地址至少2个字符')
+      .max(100, '路由地址最多100个字符')
+      .refine((value: string) => {
+        return value.startsWith('/');
+      }, '路由地址必须以 / 开头')
       .refine(
         async (value: string) => {
           return !(await isMenuPathExists(value, formData.value?.id));
         },
         (value) => ({
-          message: $t('ui.formRules.alreadyExists', [
-            $t('system.menu.path'),
-            value,
-          ]),
+          message: `路由地址 \`${value}\` 已存在`,
         }),
       ),
   },
@@ -156,21 +145,18 @@ const schema: VbenFormSchema[] = [
       triggerFields: ['type'],
     },
     fieldName: 'activePath',
-    help: $t('system.menu.activePathHelp'),
-    label: $t('system.menu.activePath'),
+    help: '跳转到当前路由时，需要激活的菜单路径。\n当不在导航菜单中显示时，需要指定激活路径',
+    label: '激活路径',
     rules: z
       .string()
-      .min(2, $t('ui.formRules.minLength', [$t('system.menu.path'), 2]))
-      .max(100, $t('ui.formRules.maxLength', [$t('system.menu.path'), 100]))
-      .refine(
-        (value: string) => {
-          return value.startsWith('/');
-        },
-        $t('ui.formRules.startWith', [$t('system.menu.path'), '/']),
-      )
+      .min(2, '路由地址至少2个字符')
+      .max(100, '路由地址最多100个字符')
+      .refine((value: string) => {
+        return value.startsWith('/');
+      }, '路由地址必须以 / 开头')
       .refine(async (value: string) => {
         return await isMenuPathExists(value, formData.value?.id);
-      }, $t('system.menu.activePathMustExist'))
+      }, '该路径未能找到有效的菜单')
       .optional(),
   },
   {
@@ -185,7 +171,7 @@ const schema: VbenFormSchema[] = [
       triggerFields: ['type'],
     },
     fieldName: 'meta.icon',
-    label: $t('system.menu.icon'),
+    label: '图标',
   },
   {
     component: 'IconPicker',
@@ -199,7 +185,7 @@ const schema: VbenFormSchema[] = [
       triggerFields: ['type'],
     },
     fieldName: 'meta.activeIcon',
-    label: $t('system.menu.activeIcon'),
+    label: '激活图标',
   },
   {
     component: 'AutoComplete',
@@ -221,7 +207,7 @@ const schema: VbenFormSchema[] = [
       triggerFields: ['type'],
     },
     fieldName: 'component',
-    label: $t('system.menu.component'),
+    label: '页面组件',
   },
   {
     component: 'Input',
@@ -232,8 +218,8 @@ const schema: VbenFormSchema[] = [
       triggerFields: ['type'],
     },
     fieldName: 'linkSrc',
-    label: $t('system.menu.linkSrc'),
-    rules: z.string().url($t('ui.formRules.invalidURL')),
+    label: '链接地址',
+    rules: z.string().url('请输入有效的链接'),
   },
   {
     component: 'Input',
@@ -247,21 +233,21 @@ const schema: VbenFormSchema[] = [
       triggerFields: ['type'],
     },
     fieldName: 'authCode',
-    label: $t('system.menu.authCode'),
+    label: '权限标识',
   },
   {
     component: 'RadioGroup',
     componentProps: {
       buttonStyle: 'solid',
       options: [
-        { label: $t('common.enabled'), value: 1 },
-        { label: $t('common.disabled'), value: 0 },
+        { label: '已启用', value: 1 },
+        { label: '已禁用', value: 0 },
       ],
       optionType: 'button',
     },
     defaultValue: 1,
     fieldName: 'status',
-    label: $t('system.menu.status'),
+    label: '状态',
   },
   {
     component: 'Select',
@@ -269,8 +255,8 @@ const schema: VbenFormSchema[] = [
       allowClear: true,
       class: 'w-full',
       options: [
-        { label: $t('system.menu.badgeType.dot'), value: 'dot' },
-        { label: $t('system.menu.badgeType.normal'), value: 'normal' },
+        { label: '点', value: 'dot' },
+        { label: '文字', value: 'normal' },
       ],
     },
     dependencies: {
@@ -280,7 +266,7 @@ const schema: VbenFormSchema[] = [
       triggerFields: ['type'],
     },
     fieldName: 'meta.badgeType',
-    label: $t('system.menu.badgeType.title'),
+    label: '徽标类型',
   },
   {
     component: 'Input',
@@ -298,7 +284,7 @@ const schema: VbenFormSchema[] = [
       triggerFields: ['type'],
     },
     fieldName: 'meta.badge',
-    label: $t('system.menu.badge'),
+    label: '徽章内容',
   },
   {
     component: 'Select',
@@ -317,7 +303,7 @@ const schema: VbenFormSchema[] = [
       triggerFields: ['type'],
     },
     fieldName: 'meta.badgeVariants',
-    label: $t('system.menu.badgeVariants'),
+    label: '徽标样式',
   },
   {
     component: 'Divider',
@@ -332,7 +318,7 @@ const schema: VbenFormSchema[] = [
     hideLabel: true,
     renderComponentContent() {
       return {
-        default: () => $t('system.menu.advancedSettings'),
+        default: () => '其它设置',
       };
     },
   },
@@ -347,7 +333,7 @@ const schema: VbenFormSchema[] = [
     fieldName: 'meta.keepAlive',
     renderComponentContent() {
       return {
-        default: () => $t('system.menu.keepAlive'),
+        default: () => '缓存标签页',
       };
     },
   },
@@ -362,7 +348,7 @@ const schema: VbenFormSchema[] = [
     fieldName: 'meta.affixTab',
     renderComponentContent() {
       return {
-        default: () => $t('system.menu.affixTab'),
+        default: () => '固定在标签',
       };
     },
   },
@@ -377,7 +363,7 @@ const schema: VbenFormSchema[] = [
     fieldName: 'meta.hideInMenu',
     renderComponentContent() {
       return {
-        default: () => $t('system.menu.hideInMenu'),
+        default: () => '隐藏菜单',
       };
     },
   },
@@ -392,7 +378,7 @@ const schema: VbenFormSchema[] = [
     fieldName: 'meta.hideChildrenInMenu',
     renderComponentContent() {
       return {
-        default: () => $t('system.menu.hideChildrenInMenu'),
+        default: () => '隐藏子菜单',
       };
     },
   },
@@ -407,7 +393,7 @@ const schema: VbenFormSchema[] = [
     fieldName: 'meta.hideInBreadcrumb',
     renderComponentContent() {
       return {
-        default: () => $t('system.menu.hideInBreadcrumb'),
+        default: () => '在面包屑中隐藏',
       };
     },
   },
@@ -422,7 +408,7 @@ const schema: VbenFormSchema[] = [
     fieldName: 'meta.hideInTab',
     renderComponentContent() {
       return {
-        default: () => $t('system.menu.hideInTab'),
+        default: () => '在标签栏中隐藏',
       };
     },
   },
@@ -453,9 +439,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
       if (data) {
         formData.value = data;
         formApi.setValues(formData.value);
-        titleSuffix.value = formData.value.meta?.title
-          ? $t(formData.value.meta.title)
-          : '';
+        titleSuffix.value = formData.value.meta?.title ?? '';
       } else {
         formApi.resetForm();
         titleSuffix.value = '';
@@ -490,9 +474,7 @@ async function onSubmit() {
   }
 }
 const getDrawerTitle = computed(() =>
-  formData.value?.id
-    ? $t('ui.actionTitle.edit', [$t('system.menu.name')])
-    : $t('ui.actionTitle.create', [$t('system.menu.name')]),
+  formData.value?.id ? '修改菜单' : '新增菜单',
 );
 </script>
 <template>

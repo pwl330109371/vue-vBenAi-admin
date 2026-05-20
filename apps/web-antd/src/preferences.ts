@@ -20,34 +20,38 @@ export const overridesPreferences = defineOverridesPreferences({
   app: {
     /** 生产环境使用后端驱动菜单与路由，开发期可配合 backend-mock */
     accessMode: 'backend',
+    locale: 'zh-CN',
     name: import.meta.env.VITE_APP_TITLE,
+  },
+  widget: {
+    languageToggle: false,
   },
 });
 
 export const preferencesExtension =
   definePreferencesExtension<WebAntdPreferencesExtension>({
-    tabLabel: 'preferences.antd.tabLabel',
-    title: 'preferences.antd.title',
+    tabLabel: '业务偏好',
+    title: 'Ant Design Vue 扩展',
     fields: [
       {
         component: 'switch',
         defaultValue: true,
         key: 'enableFormFullscreen',
-        label: 'preferences.antd.fields.enableFormFullscreen.label',
-        tip: 'preferences.antd.fields.enableFormFullscreen.tip',
+        label: '表单全屏',
+        tip: '弹窗表单是否支持全屏',
       },
       {
         component: 'select',
         defaultValue: 'single',
         key: 'tenantMode',
-        label: 'preferences.antd.fields.tenantMode.label',
+        label: '租户模式',
         options: [
           {
-            label: 'preferences.antd.fields.tenantMode.options.single.label',
+            label: '单租户',
             value: 'single',
           },
           {
-            label: 'preferences.antd.fields.tenantMode.options.multi.label',
+            label: '多租户',
             value: 'multi',
           },
         ],
@@ -61,14 +65,14 @@ export const preferencesExtension =
         },
         defaultValue: 20,
         key: 'defaultTableSize',
-        label: 'preferences.antd.fields.defaultTableSize.label',
+        label: '默认表格行数',
       },
       {
         component: 'input',
         defaultValue: '',
         key: 'reportTitle',
-        label: 'preferences.antd.fields.reportTitle.label',
-        placeholder: 'preferences.antd.fields.reportTitle.placeholder',
+        label: '报表标题',
+        placeholder: '请输入报表标题',
       },
     ],
   });

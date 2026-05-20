@@ -56,11 +56,64 @@ export const MOCK_CODES = [
   },
 ];
 
+const systemMenus = [
+  {
+    meta: {
+      badge: 'new',
+      badgeType: 'normal',
+      badgeVariants: 'primary',
+      icon: 'carbon:settings',
+      order: 9997,
+      title: '系统管理',
+    },
+    name: 'System',
+    path: '/system',
+    children: [
+      {
+        name: 'SystemMenu',
+        path: '/system/menu',
+        component: '/system/menu/index',
+        meta: {
+          icon: 'carbon:menu',
+          title: '菜单管理',
+        },
+      },
+      {
+        name: 'SystemDept',
+        path: '/system/dept',
+        component: '/system/dept/index',
+        meta: {
+          icon: 'carbon:container-services',
+          title: '部门管理',
+        },
+      },
+      {
+        name: 'SystemUser',
+        path: '/system/user',
+        component: '/system/user/index',
+        meta: {
+          icon: 'mdi:user',
+          title: '用户管理',
+        },
+      },
+      {
+        name: 'SystemRole',
+        path: '/system/role',
+        component: '/system/role/index',
+        meta: {
+          icon: 'mdi:account-group',
+          title: '角色管理',
+        },
+      },
+    ],
+  },
+];
+
 const dashboardMenus = [
   {
     meta: {
       order: -1,
-      title: 'page.dashboard.title',
+      title: '概览',
     },
     name: 'Dashboard',
     path: '/dashboard',
@@ -72,7 +125,7 @@ const dashboardMenus = [
         component: '/dashboard/analytics/index',
         meta: {
           affixTab: true,
-          title: 'page.dashboard.analytics',
+          title: '分析页',
         },
       },
       {
@@ -80,7 +133,7 @@ const dashboardMenus = [
         path: '/workspace',
         component: '/dashboard/workspace/index',
         meta: {
-          title: 'page.dashboard.workspace',
+          title: '工作台',
         },
       },
     ],
@@ -93,7 +146,7 @@ const createDemosMenus = (role: 'admin' | 'super' | 'user') => {
       component: '/demos/access/admin-visible',
       meta: {
         icon: 'mdi:button-cursor',
-        title: 'demos.access.adminVisible',
+        title: 'Admin 可见',
       },
       name: 'AccessAdminVisibleDemo',
       path: '/demos/access/admin-visible',
@@ -102,7 +155,7 @@ const createDemosMenus = (role: 'admin' | 'super' | 'user') => {
       component: '/demos/access/super-visible',
       meta: {
         icon: 'mdi:button-cursor',
-        title: 'demos.access.superVisible',
+        title: 'Super 可见',
       },
       name: 'AccessSuperVisibleDemo',
       path: '/demos/access/super-visible',
@@ -111,7 +164,7 @@ const createDemosMenus = (role: 'admin' | 'super' | 'user') => {
       component: '/demos/access/user-visible',
       meta: {
         icon: 'mdi:button-cursor',
-        title: 'demos.access.userVisible',
+        title: 'User 可见',
       },
       name: 'AccessUserVisibleDemo',
       path: '/demos/access/user-visible',
@@ -124,7 +177,7 @@ const createDemosMenus = (role: 'admin' | 'super' | 'user') => {
         icon: 'ic:baseline-view-in-ar',
         keepAlive: true,
         order: 1000,
-        title: 'demos.title',
+        title: '演示',
       },
       name: 'Demos',
       path: '/demos',
@@ -132,10 +185,10 @@ const createDemosMenus = (role: 'admin' | 'super' | 'user') => {
       children: [
         {
           name: 'AccessDemos',
-          path: '/demosaccess',
+          path: '/demos/access',
           meta: {
             icon: 'mdi:cloud-key-outline',
-            title: 'demos.access.backendPermissions',
+            title: '后端权限',
           },
           redirect: '/demos/access/page-control',
           children: [
@@ -145,7 +198,7 @@ const createDemosMenus = (role: 'admin' | 'super' | 'user') => {
               component: '/demos/access/index',
               meta: {
                 icon: 'mdi:page-previous-outline',
-                title: 'demos.access.pageAccess',
+                title: '页面访问',
               },
             },
             {
@@ -154,7 +207,7 @@ const createDemosMenus = (role: 'admin' | 'super' | 'user') => {
               component: '/demos/access/button-control',
               meta: {
                 icon: 'mdi:button-cursor',
-                title: 'demos.access.buttonControl',
+                title: '按钮控制',
               },
             },
             {
@@ -165,7 +218,7 @@ const createDemosMenus = (role: 'admin' | 'super' | 'user') => {
                 authority: ['no-body'],
                 icon: 'mdi:button-cursor',
                 menuVisibleWithForbidden: true,
-                title: 'demos.access.menuVisible403',
+                title: '菜单可见(403)',
               },
             },
             roleWithMenus[role],
@@ -178,15 +231,15 @@ const createDemosMenus = (role: 'admin' | 'super' | 'user') => {
 
 export const MOCK_MENUS = [
   {
-    menus: [...dashboardMenus, ...createDemosMenus('super')],
+    menus: [...dashboardMenus, ...createDemosMenus('super'), ...systemMenus],
     username: 'vben',
   },
   {
-    menus: [...dashboardMenus, ...createDemosMenus('admin')],
+    menus: [...dashboardMenus, ...createDemosMenus('admin'), ...systemMenus],
     username: 'admin',
   },
   {
-    menus: [...dashboardMenus, ...createDemosMenus('user')],
+    menus: [...dashboardMenus, ...createDemosMenus('user'), ...systemMenus],
     username: 'jack',
   },
 ];
@@ -202,7 +255,7 @@ export const MOCK_MENU_LIST = [
     component: '/dashboard/workspace/index',
     meta: {
       icon: 'carbon:workspace',
-      title: 'page.dashboard.workspace',
+      title: '工作台',
       affixTab: true,
       order: 0,
     },
@@ -212,7 +265,7 @@ export const MOCK_MENU_LIST = [
     meta: {
       icon: 'carbon:settings',
       order: 9997,
-      title: 'system.title',
+      title: '系统管理',
       badge: 'new',
       badgeType: 'normal',
       badgeVariants: 'primary',
@@ -232,9 +285,9 @@ export const MOCK_MENU_LIST = [
         type: 'menu',
         meta: {
           icon: 'carbon:menu',
-          title: 'system.menu.title',
+          title: '菜单管理',
         },
-        component: '/system/menu/list',
+        component: '/system/menu/index',
         children: [
           {
             id: 20_101,
@@ -243,7 +296,7 @@ export const MOCK_MENU_LIST = [
             status: 1,
             type: 'button',
             authCode: 'System:Menu:Create',
-            meta: { title: 'common.create' },
+            meta: { title: '新增' },
           },
           {
             id: 20_102,
@@ -252,7 +305,7 @@ export const MOCK_MENU_LIST = [
             status: 1,
             type: 'button',
             authCode: 'System:Menu:Edit',
-            meta: { title: 'common.edit' },
+            meta: { title: '修改' },
           },
           {
             id: 20_103,
@@ -261,7 +314,7 @@ export const MOCK_MENU_LIST = [
             status: 1,
             type: 'button',
             authCode: 'System:Menu:Delete',
-            meta: { title: 'common.delete' },
+            meta: { title: '删除' },
           },
         ],
       },
@@ -275,9 +328,9 @@ export const MOCK_MENU_LIST = [
         authCode: 'System:Dept:List',
         meta: {
           icon: 'carbon:container-services',
-          title: 'system.dept.title',
+          title: '部门管理',
         },
-        component: '/system/dept/list',
+        component: '/system/dept/index',
         children: [
           {
             id: 20_401,
@@ -286,7 +339,7 @@ export const MOCK_MENU_LIST = [
             status: 1,
             type: 'button',
             authCode: 'System:Dept:Create',
-            meta: { title: 'common.create' },
+            meta: { title: '新增' },
           },
           {
             id: 20_402,
@@ -295,7 +348,7 @@ export const MOCK_MENU_LIST = [
             status: 1,
             type: 'button',
             authCode: 'System:Dept:Edit',
-            meta: { title: 'common.edit' },
+            meta: { title: '修改' },
           },
           {
             id: 20_403,
@@ -304,7 +357,7 @@ export const MOCK_MENU_LIST = [
             status: 1,
             type: 'button',
             authCode: 'System:Dept:Delete',
-            meta: { title: 'common.delete' },
+            meta: { title: '删除' },
           },
         ],
       },
@@ -318,9 +371,9 @@ export const MOCK_MENU_LIST = [
         type: 'menu',
         meta: {
           icon: 'mdi:user',
-          title: 'system.user.title',
+          title: '用户管理',
         },
-        component: '/system/user/list',
+        component: '/system/user/index',
       },
       {
         id: 204,
@@ -332,9 +385,9 @@ export const MOCK_MENU_LIST = [
         type: 'menu',
         meta: {
           icon: 'mdi:account-group',
-          title: 'system.role.title',
+          title: '角色管理',
         },
-        component: '/system/role/list',
+        component: '/system/role/index',
       },
     ],
   },
@@ -343,7 +396,7 @@ export const MOCK_MENU_LIST = [
     meta: {
       badgeType: 'dot',
       order: 9998,
-      title: 'demos.vben.title',
+      title: '项目',
       icon: 'carbon:data-center',
     },
     name: 'Project',
@@ -362,7 +415,7 @@ export const MOCK_MENU_LIST = [
         meta: {
           icon: 'carbon:book',
           iframeSrc: 'https://doc.vben.pro',
-          title: 'demos.vben.document',
+          title: '文档',
         },
       },
       {
@@ -391,7 +444,7 @@ export const MOCK_MENU_LIST = [
           icon: 'carbon:hexagon-vertical-solid',
           badgeType: 'dot',
           link: 'https://ant.vben.pro',
-          title: 'demos.vben.antdv',
+          title: 'Ant Design Vue 版本',
         },
       },
     ],
@@ -404,7 +457,7 @@ export const MOCK_MENU_LIST = [
     meta: {
       icon: 'lucide:copyright',
       order: 9999,
-      title: 'demos.vben.about',
+      title: '关于',
     },
     name: 'About',
     path: '/about',

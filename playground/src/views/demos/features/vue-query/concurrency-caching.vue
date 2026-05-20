@@ -4,7 +4,7 @@ import type { Recordable } from '@vben/types';
 import { useQuery } from '@tanstack/vue-query';
 
 import { useVbenForm } from '#/adapter/form';
-import { getMenuList } from '#/api';
+import { getMenuList } from '#/views/system/menu/api';
 
 const queryKey = ['demo', 'api', 'options'];
 const count = 4;

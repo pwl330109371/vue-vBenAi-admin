@@ -3,7 +3,7 @@ import type { DataNode } from 'antdv-next/dist/tree';
 
 import type { Recordable } from '@vben/types';
 
-import type { SystemUserApi } from '#/api/system/user';
+import type { SystemUserApi } from '../api';
 
 import { computed, nextTick, ref } from 'vue';
 
@@ -13,11 +13,11 @@ import { IconifyIcon } from '@vben/icons';
 import { Spin } from 'antdv-next';
 
 import { useVbenForm } from '#/adapter/form';
-import { getMenuList } from '#/api/system/menu';
-import { createUser, updateUser } from '#/api/system/user';
 import { $t } from '#/locales';
 
-import { useFormSchema } from '../data';
+import { getMenuList } from '../../menu/api';
+import { createUser, updateUser } from '../api';
+import { useFormSchema } from '../config';
 
 const emits = defineEmits(['success']);
 

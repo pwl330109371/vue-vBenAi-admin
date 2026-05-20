@@ -13,6 +13,9 @@ import { getPopupContainer } from '@vben/utils';
 import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 
 import { useVbenForm, z } from '#/adapter/form';
+import { $t } from '#/locales';
+import { componentKeys } from '#/router/routes';
+
 import {
   createMenu,
   getMenuList,
@@ -20,11 +23,8 @@ import {
   isMenuPathExists,
   SystemMenuApi,
   updateMenu,
-} from '#/api/system/menu';
-import { $t } from '#/locales';
-import { componentKeys } from '#/router/routes';
-
-import { getMenuTypeOptions } from '../data';
+} from '../api';
+import { getMenuTypeOptions } from '../config';
 
 const emit = defineEmits<{
   success: [];
