@@ -18,6 +18,8 @@ interface WebAntdPreferencesExtension {
 export const overridesPreferences = defineOverridesPreferences({
   // overrides
   app: {
+    /** 生产环境使用后端驱动菜单与路由，开发期可配合 backend-mock */
+    accessMode: 'backend',
     name: import.meta.env.VITE_APP_TITLE,
   },
 });
