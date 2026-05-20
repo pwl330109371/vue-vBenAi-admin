@@ -5,10 +5,7 @@
 ## 使用
 
 ```ts
-import {
-  SYSTEM_RECORD_STATUS,
-  formatSystemRecordStatus,
-} from '@vben/business';
+import { SYSTEM_RECORD_STATUS, formatSystemRecordStatus } from '@vben/business';
 ```
 
 ## 约定
