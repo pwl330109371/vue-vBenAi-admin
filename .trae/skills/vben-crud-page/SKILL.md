@@ -6,6 +6,7 @@ description: Create a new Vben Admin CRUD page under apps/web-antd/src/views wit
 ## Inputs required
 
 Ask user if missing:
+
 - module path, e.g. `ai/prompt`
 - Chinese menu title
 - API prefix, e.g. `/ai/prompt`
@@ -14,6 +15,7 @@ Ask user if missing:
 ## Reference implementation
 
 Copy structure from:
+
 - `apps/web-antd/src/views/system/user/`
 
 ## Steps

@@ -60,7 +60,7 @@ flowchart TB
 ```
 
 | 角色 | 职责 | 工具 |
-|------|------|------|
+| --- | --- | --- |
 | 产品 / 业务 | 页面清单、字段、权限点 | 飞书 / Markdown PRD |
 | 前端 | 拆任务、写 Prompt、过 CR、关键逻辑 | Claude Code + Trae |
 | AI | CRUD、路由、国际化键、Mock、样式微调 | Claude Code |
@@ -79,19 +79,19 @@ flowchart TB
 
 ### 2.1 技术栈
 
-| 项 | 当前项目 |
-|----|----------|
-| 框架 | Vue 3 + Composition API + `<script setup>` |
-| UI | **Ant Design Vue**（`apps/web-antd`，非 Element Plus） |
-| 表格 | VxeTable（`#/adapter/vxe-table` → `useVbenVxeGrid`） |
-| 表单 | Vben Form（`#/adapter/form` → `VbenFormSchema`） |
-| 弹层 | `useVbenDrawer` / `useVbenModal`（`@vben/common-ui`） |
-| 请求 | `requestClient`（`#/api/request`） |
-| 状态 | Pinia（`#/store`） |
-| 路由 | `apps/web-antd/src/router/routes/modules/*.ts` |
-| 规范 | `@vben/eslint-config`（根目录 `eslint.config.mjs`） |
-| 包管理 | pnpm workspace + turbo |
-| Node | `^22.18.0 \|\| ^24.0.0` |
+| 项     | 当前项目                                               |
+| ------ | ------------------------------------------------------ |
+| 框架   | Vue 3 + Composition API + `<script setup>`             |
+| UI     | **Ant Design Vue**（`apps/web-antd`，非 Element Plus） |
+| 表格   | VxeTable（`#/adapter/vxe-table` → `useVbenVxeGrid`）   |
+| 表单   | Vben Form（`#/adapter/form` → `VbenFormSchema`）       |
+| 弹层   | `useVbenDrawer` / `useVbenModal`（`@vben/common-ui`）  |
+| 请求   | `requestClient`（`#/api/request`）                     |
+| 状态   | Pinia（`#/store`）                                     |
+| 路由   | `apps/web-antd/src/router/routes/modules/*.ts`         |
+| 规范   | `@vben/eslint-config`（根目录 `eslint.config.mjs`）    |
+| 包管理 | pnpm workspace + turbo                                 |
+| Node   | `^22.18.0 \|\| ^24.0.0`                                |
 
 ### 2.2 业务页标准四层结构（**AI 复制此模式**）
 
@@ -132,7 +132,7 @@ pnpm test:unit
 ## 3. 工具链：Claude Code 为主、Trae 为辅
 
 | 场景 | 推荐工具 | 说明 |
-|------|----------|------|
+| --- | --- | --- |
 | 新页面 / 大段生成 | **Claude Code** CLI | `claude` 在项目根或 `apps/web-antd` 启动 |
 | 初始化项目记忆 | Claude `/init` | 生成 `CLAUDE.md`、skills、hooks 提案 |
 | 按文件精细改 | Claude Code | path-scoped rules 自动生效 |
@@ -144,7 +144,7 @@ pnpm test:unit
 **Claude Code 官方能力对照**
 
 | 能力 | 路径 | 文档 |
-|------|------|------|
+| --- | --- | --- |
 | 项目记忆 | `CLAUDE.md` / `.claude/CLAUDE.md` | [memory](https://code.claude.com/docs/en/memory) |
 | 分路径规则 | `.claude/rules/*.md` | 同上 |
 | 技能 | `.claude/skills/<name>/SKILL.md` | [skills](https://code.claude.com/docs/en/skills) |
@@ -155,11 +155,11 @@ pnpm test:unit
 
 **Trae 双轨（可选，团队已用 Trae 时）**
 
-| 能力 | 路径 |
-|------|------|
-| 规则 | `.trae/rules/*.md` 或 Trae 项目 Rules 配置 |
+| 能力 | 路径                                         |
+| ---- | -------------------------------------------- |
+| 规则 | `.trae/rules/*.md` 或 Trae 项目 Rules 配置   |
 | 技能 | `.trae/skills/<name>/SKILL.md`（若版本支持） |
-| MCP | Trae 设置 → MCP |
+| MCP  | Trae 设置 → MCP                              |
 
 建议：**Claude 的 `.claude/rules` 为权威**；Trae 规则用 `symlink` 或复制保持同步。
 
@@ -218,13 +218,13 @@ claude
 
 ### 5.1 Claude Code 内置 / Bundled Skills（开箱即用）
 
-| Skill | 用途 |
-|-------|------|
-| `/simplify` | 简化冗余代码 |
-| `/debug` | 系统性排查 bug |
-| `/batch` | 批量多文件修改 |
-| `/loop` | 重复任务直到完成 |
-| `/compact` | 压缩上下文（长会话） |
+| Skill       | 用途                 |
+| ----------- | -------------------- |
+| `/simplify` | 简化冗余代码         |
+| `/debug`    | 系统性排查 bug       |
+| `/batch`    | 批量多文件修改       |
+| `/loop`     | 重复任务直到完成     |
+| `/compact`  | 压缩上下文（长会话） |
 
 ### 5.2 推荐安装的 Claude Plugins（`.claude/settings.json`）
 
@@ -254,14 +254,14 @@ claude
 }
 ```
 
-| MCP | 优先级 | 用途 |
-|-----|--------|------|
-| **Playwright MCP** | P0 | E2E、AI 生成页面的自动化验收 |
-| **Trae 浏览器 MCP** | P0 | 开发时人工+AI 点验 |
-| **GitHub / GitLab** | P1 | Issue、PR、CI 日志 |
-| **Figma**（`plugin-figma-figma`） | P2 | 设计稿还原 |
-| **Chrome DevTools** | P2 | 性能、网络抓包 |
-| **Feishu**（飞书文档） | P2 | PRD 读取 |
+| MCP                               | 优先级 | 用途                         |
+| --------------------------------- | ------ | ---------------------------- |
+| **Playwright MCP**                | P0     | E2E、AI 生成页面的自动化验收 |
+| **Trae 浏览器 MCP**               | P0     | 开发时人工+AI 点验           |
+| **GitHub / GitLab**               | P1     | Issue、PR、CI 日志           |
+| **Figma**（`plugin-figma-figma`） | P2     | 设计稿还原                   |
+| **Chrome DevTools**               | P2     | 性能、网络抓包               |
+| **Feishu**（飞书文档）            | P2     | PRD 读取                     |
 
 **安全**：`.mcp.json` 与 `settings.json` 的 `permissions.deny` 必须禁止读取：
 
@@ -279,14 +279,14 @@ claude
 
 ### 5.5 Trae / VS Code 编辑器插件（人工精修仍需要）
 
-| 插件 | 用途 |
-|------|------|
-| Vue - Official | SFC 高亮、类型 |
-| ESLint | 与 `@vben/eslint-config` 一致 |
-| Tailwind CSS IntelliSense | 工具类提示 |
-| i18n Ally | `locales/langs` 键管理 |
-| Error Lens | 行内错误 |
-| Pretty TypeScript Errors | 类型错误可读性 |
+| 插件                      | 用途                          |
+| ------------------------- | ----------------------------- |
+| Vue - Official            | SFC 高亮、类型                |
+| ESLint                    | 与 `@vben/eslint-config` 一致 |
+| Tailwind CSS IntelliSense | 工具类提示                    |
+| i18n Ally                 | `locales/langs` 键管理        |
+| Error Lens                | 行内错误                      |
+| Pretty TypeScript Errors  | 类型错误可读性                |
 
 ### 5.6 不使用或慎用的东西
 
@@ -322,8 +322,8 @@ claude
 ```markdown
 ---
 paths:
-  - "apps/web-antd/src/views/**/*.vue"
-  - "playground/src/views/**/*.vue"
+  - 'apps/web-antd/src/views/**/*.vue'
+  - 'playground/src/views/**/*.vue'
 ---
 
 # Vue 页面规则
@@ -343,8 +343,8 @@ paths:
 ```markdown
 ---
 paths:
-  - "apps/web-antd/src/views/**/api.ts"
-  - "apps/web-antd/src/api/**/*.ts"
+  - 'apps/web-antd/src/views/**/api.ts'
+  - 'apps/web-antd/src/api/**/*.ts'
 ---
 
 # API 层规则
@@ -361,7 +361,7 @@ paths:
 ```markdown
 ---
 paths:
-  - "apps/web-antd/src/router/**/*.ts"
+  - 'apps/web-antd/src/router/**/*.ts'
 ---
 
 # 路由规则
@@ -377,7 +377,7 @@ paths:
 ```markdown
 ---
 paths:
-  - "apps/web-antd/src/**/*.vue"
+  - 'apps/web-antd/src/**/*.vue'
 ---
 
 # Ant Design Vue 规则
@@ -393,8 +393,8 @@ paths:
 ```markdown
 ---
 paths:
-  - "apps/web-antd/src/views/ai/**/*"
-  - "apps/web-antd/src/api/**/ai*.ts"
+  - 'apps/web-antd/src/views/ai/**/*'
+  - 'apps/web-antd/src/api/**/ai*.ts'
 ---
 
 # AI 功能模块规则
@@ -415,7 +415,7 @@ paths:
 ```markdown
 ---
 paths:
-  - "apps/web-antd/src/views/**/*"
+  - 'apps/web-antd/src/views/**/*'
 ---
 
 （粘贴 vue-pages.md + api-layer.md 要点）
@@ -428,7 +428,7 @@ paths:
 ### 7.1 技能矩阵
 
 | Skill 目录 | 触发方式 | 职责 |
-|------------|----------|------|
+| --- | --- | --- |
 | `vben-crud-page` | `/vben-crud-page` 或描述匹配 | 按模板新建完整 CRUD 目录 |
 | `vben-route-menu` | 自动 / 手动 | 注册路由 + mock 菜单 |
 | `vben-mock-api` | 手动 | 改 `apps/backend-mock` |
@@ -439,7 +439,7 @@ paths:
 **个人技能（~/.claude/skills/）建议安装**
 
 | 来源 | Skill | 用途 |
-|------|-------|------|
+| --- | --- | --- |
 | 已有 | `frontend-interaction-guide` | 中后台交互 20 条（需适配 Ant Design Vue 语法） |
 | 已有 | `element-plus-vue3` | **勿用于 web-antd**；仅其他 Element 项目 |
 | Trae 内置 / 社区 | 规则与技能模板 | 维护项目规范 |
@@ -456,6 +456,7 @@ description: Create a new Vben Admin CRUD page under apps/web-antd/src/views wit
 ## Inputs required
 
 Ask user if missing:
+
 - module path, e.g. `ai/prompt`
 - Chinese menu title
 - API prefix, e.g. `/ai/prompt`
@@ -464,6 +465,7 @@ Ask user if missing:
 ## Reference implementation
 
 Copy structure from:
+
 - `apps/web-antd/src/views/system/user/`
 
 ## Steps
@@ -514,8 +516,7 @@ description: Implement AI chat UI with streaming, session list, and error states
 
 ## Streaming
 
-Use fetch with ReadableStream or EventSource; store abort controller in component scope.
-On unmount, abort pending request.
+Use fetch with ReadableStream or EventSource; store abort controller in component scope. On unmount, abort pending request.
 
 ## UI
 
@@ -544,20 +545,19 @@ description: Run lint and vue-tsc for web-antd and fix ESLint issues. Use before
 
 ## Instructions
 
-Fix reported issues in changed files only. Prefer patterns from @vben/eslint-config.
-Do not disable rules with eslint-disable unless necessary and commented.
+Fix reported issues in changed files only. Prefer patterns from @vben/eslint-config. Do not disable rules with eslint-disable unless necessary and commented.
 ```
 
 ### 7.6 将 `frontend-interaction-guide` 适配到 Ant Design Vue
 
 在个人 skill 增加 `vben-antd-interaction/SKILL.md`，把 Element Plus API 映射表写死，例如：
 
-| 规范 | Element Plus | Ant Design Vue |
-|------|----------------|----------------|
-| 表格加载 | `v-loading` | `loading` prop 或 grid 内置 |
-| 确认框 | `ElMessageBox.confirm` | `Modal.confirm` |
-| 消息 | `ElMessage.success` | `message.success` |
-| 弹窗遮罩 | `:close-on-click-modal="false"` | `:mask-closable="false"` |
+| 规范     | Element Plus                    | Ant Design Vue              |
+| -------- | ------------------------------- | --------------------------- |
+| 表格加载 | `v-loading`                     | `loading` prop 或 grid 内置 |
+| 确认框   | `ElMessageBox.confirm`          | `Modal.confirm`             |
+| 消息     | `ElMessage.success`             | `message.success`           |
+| 弹窗遮罩 | `:close-on-click-modal="false"` | `:mask-closable="false"`    |
 
 ---
 
@@ -576,16 +576,11 @@ Do not disable rules with eslint-disable unless necessary and commented.
 
 ## Commands
 
-pnpm install
-pnpm dev:antd
-pnpm -F @vben/web-antd run typecheck
-pnpm lint
-pnpm run build:antd
+pnpm install pnpm dev:antd pnpm -F @vben/web-antd run typecheck pnpm lint pnpm run build:antd
 
 ## CRUD page pattern (MANDATORY)
 
-views/<area>/<name>/
-  api.ts, config.ts, index.vue, modules/form.vue
+views/<area>/<name>/ api.ts, config.ts, index.vue, modules/form.vue
 
 Reference: apps/web-antd/src/views/system/user/
 
@@ -599,7 +594,7 @@ Reference: apps/web-antd/src/views/system/user/
 
 ## Router
 
-apps/web-antd/src/router/routes/modules/*.ts — lazy import views.
+apps/web-antd/src/router/routes/modules/\*.ts — lazy import views.
 
 ## Mock backend
 
@@ -607,13 +602,11 @@ apps/backend-mock — add routes when API not ready.
 
 ## AI product work
 
-New AI features go under apps/web-antd/src/views/ai/.
-See .claude/rules/ai-features.md.
+New AI features go under apps/web-antd/src/views/ai/. See .claude/rules/ai-features.md.
 
 ## Quality
 
-After edits: pnpm -F @vben/web-antd run typecheck
-Large changes: pnpm lint
+After edits: pnpm -F @vben/web-antd run typecheck Large changes: pnpm lint
 
 @apps/web-antd/package.json
 ```
@@ -670,13 +663,13 @@ Large changes: pnpm lint
 
 ### 10.1 新 CRUD 管理页（AI 为主）
 
-| 步骤 | 执行方 | 动作 |
-|------|--------|------|
-| 1 | 人 | 提供字段表、接口路径、权限码 |
-| 2 | AI | `/vben-crud-page` 生成四层文件 |
-| 3 | AI | `/vben-route-menu` + mock |
-| 4 | AI | `/lint-and-typecheck` |
-| 5 | 人 | 浏览器验收 10 分钟 |
+| 步骤 | 执行方 | 动作                           |
+| ---- | ------ | ------------------------------ |
+| 1    | 人     | 提供字段表、接口路径、权限码   |
+| 2    | AI     | `/vben-crud-page` 生成四层文件 |
+| 3    | AI     | `/vben-route-menu` + mock      |
+| 4    | AI     | `/lint-and-typecheck`          |
+| 5    | 人     | 浏览器验收 10 分钟             |
 
 ### 10.2 改列 / 改表单（AI 为主）
 
@@ -757,14 +750,14 @@ Large changes: pnpm lint
 
 ## 12. 质量门禁与人工必审点
 
-| 门禁 | 命令 / 方式 | 必须通过 |
-|------|-------------|----------|
-| 类型 | `pnpm -F @vben/web-antd run typecheck` | ✅ |
-| Lint | `pnpm lint` | ✅（合入前） |
-| 构建 | `pnpm run build:antd` | 发版前 |
-| 单元测试 | `pnpm test:unit` | 核心逻辑 |
-| E2E | Playwright MCP / `pnpm test:e2e` | 关键路径 |
-| 安全 | 人工 | 流式、XSS、密钥、权限 |
+| 门禁     | 命令 / 方式                            | 必须通过              |
+| -------- | -------------------------------------- | --------------------- |
+| 类型     | `pnpm -F @vben/web-antd run typecheck` | ✅                    |
+| Lint     | `pnpm lint`                            | ✅（合入前）          |
+| 构建     | `pnpm run build:antd`                  | 发版前                |
+| 单元测试 | `pnpm test:unit`                       | 核心逻辑              |
+| E2E      | Playwright MCP / `pnpm test:e2e`       | 关键路径              |
+| 安全     | 人工                                   | 流式、XSS、密钥、权限 |
 
 **人工必审（不可全交给 AI）**
 
@@ -789,13 +782,13 @@ views/ai/
 └── dashboard/      # Token 用量 / 调用统计
 ```
 
-| 模块 | 前端职责 | 后端依赖 |
-|------|----------|----------|
-| chat | 流式渲染、停止、重试 | SSE/WebSocket |
-| prompt | 标准 CRUD | REST |
-| model | 下拉配置、启停 | REST |
-| session | 只读列表 + 详情 | REST |
-| dashboard | Echarts | 统计 API |
+| 模块      | 前端职责             | 后端依赖      |
+| --------- | -------------------- | ------------- |
+| chat      | 流式渲染、停止、重试 | SSE/WebSocket |
+| prompt    | 标准 CRUD            | REST          |
+| model     | 下拉配置、启停       | REST          |
+| session   | 只读列表 + 详情      | REST          |
+| dashboard | Echarts              | 统计 API      |
 
 **与脚手架集成点**
 
@@ -825,7 +818,7 @@ views/ai/
 ## 15. 附录：与官方文档对照
 
 | 主题 | URL |
-|------|-----|
+| --- | --- |
 | Claude Code Settings | https://code.claude.com/docs/en/settings |
 | Memory / CLAUDE.md / rules | https://code.claude.com/docs/en/memory |
 | Skills | https://code.claude.com/docs/en/skills |

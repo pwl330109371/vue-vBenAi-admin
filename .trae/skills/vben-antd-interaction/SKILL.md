@@ -10,7 +10,7 @@ description: Vue + Ant Design Vue 中后台交互规范，适配 frontend-intera
 ## Element Plus → Ant Design Vue 映射
 
 | 规范 | Element Plus | Ant Design Vue / Vben |
-|------|----------------|----------------|
+| --- | --- | --- |
 | 表格加载 | `v-loading` | VxeGrid `loading` 或 `useVbenVxeGrid` 内置 |
 | 确认框 | `ElMessageBox.confirm` | `Modal.confirm` |
 | 消息 | `ElMessage.success` | `message.success` |

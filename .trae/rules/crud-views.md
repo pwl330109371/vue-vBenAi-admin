@@ -1,6 +1,6 @@
 ---
 paths:
-  - "apps/web-antd/src/views/**/*"
+  - 'apps/web-antd/src/views/**/*'
 ---
 
 # CRUD Views 规则（vue-pages + api-layer 要点）
