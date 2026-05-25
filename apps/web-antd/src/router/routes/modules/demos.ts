@@ -19,6 +19,15 @@ const routes: RouteRecordRaw[] = [
         path: '/demos/ant-design',
         component: () => import('#/views/demos/antd/index.vue'),
       },
+      {
+        meta: {
+          icon: 'mdi:file-document-outline',
+          title: '操作日志 Demo',
+        },
+        name: 'DemoLog',
+        path: '/demos/log',
+        component: () => import('#/views/demos/log/index.vue'),
+      },
     ],
   },
 ];

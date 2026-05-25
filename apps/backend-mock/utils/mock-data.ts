@@ -224,6 +224,15 @@ const createDemosMenus = (role: 'admin' | 'super' | 'user') => {
             roleWithMenus[role],
           ],
         },
+        {
+          name: 'DemoLog',
+          path: '/demos/log',
+          component: '/demos/log/index',
+          meta: {
+            icon: 'mdi:file-document-outline',
+            title: '操作日志 Demo',
+          },
+        },
       ],
     },
   ];
