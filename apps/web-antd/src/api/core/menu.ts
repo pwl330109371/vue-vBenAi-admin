@@ -4,7 +4,7 @@ import type { UserCenterRawMenuRoute } from './user-center-adapter';
 
 import { useAppConfig } from '@vben/hooks';
 
-import { businessApi } from '#/api/request';
+import { request } from '#/api/request';
 
 import { normalizeMenuRoutes } from './user-center-adapter';
 
@@ -16,8 +16,9 @@ const {
  * 获取用户所有菜单
  */
 export async function getAllMenusApi() {
-  const routes = await businessApi.get<UserCenterRawMenuRoute[]>(
+  const routes = await request.get<UserCenterRawMenuRoute[]>(
     `/server/menu/getRouters/${systemId}`,
+    { service: 'userCenter' },
   );
 
   return normalizeMenuRoutes(routes) as RouteRecordStringComponent[];

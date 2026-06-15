@@ -1,6 +1,6 @@
 import type { Recordable } from '@vben/types';
 
-import { requestClient } from '#/api/request';
+import { request } from '#/api/request';
 
 export namespace SystemMenuApi {
   export const BadgeVariants = [
@@ -60,16 +60,17 @@ export namespace SystemMenuApi {
 
 /** 获取菜单数据列表 */
 export async function getMenuList() {
-  return requestClient.get<Array<SystemMenuApi.SystemMenu>>(
-    '/system/menu/list',
-  );
+  return request.get<Array<SystemMenuApi.SystemMenu>>('/system/menu/list', {
+    service: 'default',
+  });
 }
 
 export async function isMenuNameExists(
   name: string,
   id?: SystemMenuApi.SystemMenu['id'],
 ) {
-  return requestClient.get<boolean>('/system/menu/name-exists', {
+  return request.get<boolean>('/system/menu/name-exists', {
+    service: 'default',
     params: { id, name },
   });
 }
@@ -78,7 +79,8 @@ export async function isMenuPathExists(
   path: string,
   id?: SystemMenuApi.SystemMenu['id'],
 ) {
-  return requestClient.get<boolean>('/system/menu/path-exists', {
+  return request.get<boolean>('/system/menu/path-exists', {
+    service: 'default',
     params: { id, path },
   });
 }
@@ -87,7 +89,7 @@ export async function isMenuPathExists(
 export async function createMenu(
   data: Omit<SystemMenuApi.SystemMenu, 'children' | 'id'>,
 ) {
-  return requestClient.post('/system/menu', data);
+  return request.post('/system/menu', { service: 'default', data });
 }
 
 /** 更新菜单 */
@@ -95,10 +97,10 @@ export async function updateMenu(
   id: string,
   data: Omit<SystemMenuApi.SystemMenu, 'children' | 'id'>,
 ) {
-  return requestClient.put(`/system/menu/${id}`, data);
+  return request.put(`/system/menu/${id}`, { service: 'default', data });
 }
 
 /** 删除菜单 */
 export async function deleteMenu(id: string) {
-  return requestClient.delete(`/system/menu/${id}`);
+  return request.delete(`/system/menu/${id}`, { service: 'default' });
 }

@@ -1,6 +1,6 @@
 import type { Recordable } from '@vben/types';
 
-import { requestClient } from '#/api/request';
+import { request } from '#/api/request';
 
 export namespace DemoLogApi {
   export type LogLevel = 'error' | 'info' | 'warn';
@@ -24,14 +24,15 @@ export namespace DemoLogApi {
 
 /** 获取操作日志列表 */
 export async function getLogList(params: Recordable<any>) {
-  return requestClient.get<Array<DemoLogApi.DemoLog>>('/demo/log/list', {
+  return request.get<Array<DemoLogApi.DemoLog>>('/demo/log/list', {
+    service: 'default',
     params,
   });
 }
 
 /** 创建操作日志 */
 export async function createLog(data: Omit<DemoLogApi.DemoLog, 'id'>) {
-  return requestClient.post('/demo/log', data);
+  return request.post('/demo/log', { service: 'default', data });
 }
 
 /** 更新操作日志 */
@@ -39,10 +40,10 @@ export async function updateLog(
   id: string,
   data: Omit<DemoLogApi.DemoLog, 'id'>,
 ) {
-  return requestClient.put(`/demo/log/${id}`, data);
+  return request.put(`/demo/log/${id}`, { service: 'default', data });
 }
 
 /** 删除操作日志 */
 export async function deleteLog(id: string) {
-  return requestClient.delete(`/demo/log/${id}`);
+  return request.delete(`/demo/log/${id}`, { service: 'default' });
 }

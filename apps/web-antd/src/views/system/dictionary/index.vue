@@ -18,16 +18,19 @@ import { useColumns, useGridFormSchema } from './config';
 import Form from './modules/form.vue';
 import ItemValues from './modules/item-values.vue';
 
+// Dictionary create/edit drawer.
 const [FormDrawer, formDrawerApi] = useVbenDrawer({
   connectedComponent: Form,
   destroyOnClose: true,
 });
 
+// Nested drawer for managing dictionary item values.
 const [ItemValuesDrawer, itemValuesDrawerApi] = useVbenDrawer({
   connectedComponent: ItemValues,
   destroyOnClose: true,
 });
 
+// Main list grid: search form + paginated remote data + column sort.
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
     schema: useGridFormSchema(),
@@ -52,6 +55,9 @@ const [Grid, gridApi] = useVbenVxeGrid({
     rowConfig: {
       keyField: 'id',
     },
+    sortConfig: {
+      defaultSort: { field: 'createTime', order: 'desc' },
+    },
     toolbarConfig: {
       custom: true,
       export: false,
@@ -62,6 +68,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
   } as VxeTableGridOptions<Dictionary>,
 });
 
+/** Route row operation buttons to the matching handler. */
 function onActionClick({ code, row }: OnActionClickParams<Dictionary>) {
   switch (code) {
     case 'edit': {
@@ -82,6 +89,7 @@ function onActionClick({ code, row }: OnActionClickParams<Dictionary>) {
   }
 }
 
+/** Reload the current page after create/update/delete. */
 function onRefresh() {
   gridApi.query();
 }

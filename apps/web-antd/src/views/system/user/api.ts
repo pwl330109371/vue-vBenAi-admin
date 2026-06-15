@@ -1,6 +1,6 @@
 import type { Recordable } from '@vben/types';
 
-import { requestClient } from '#/api/request';
+import { request } from '#/api/request';
 
 export namespace SystemUserApi {
   export interface SystemUser {
@@ -15,15 +15,15 @@ export namespace SystemUserApi {
 
 /** 获取用户列表数据 */
 export async function getUserList(params: Recordable<any>) {
-  return requestClient.get<Array<SystemUserApi.SystemUser>>(
-    '/system/user/list',
-    { params },
-  );
+  return request.get<Array<SystemUserApi.SystemUser>>('/system/user/list', {
+    service: 'default',
+    params,
+  });
 }
 
 /** 创建用户 */
 export async function createUser(data: Omit<SystemUserApi.SystemUser, 'id'>) {
-  return requestClient.post('/system/user', data);
+  return request.post('/system/user', { service: 'default', data });
 }
 
 /** 更新用户 */
@@ -31,10 +31,10 @@ export async function updateUser(
   id: string,
   data: Omit<SystemUserApi.SystemUser, 'id'>,
 ) {
-  return requestClient.put(`/system/user/${id}`, data);
+  return request.put(`/system/user/${id}`, { service: 'default', data });
 }
 
 /** 删除用户 */
 export async function deleteUser(id: string) {
-  return requestClient.delete(`/system/user/${id}`);
+  return request.delete(`/system/user/${id}`, { service: 'default' });
 }

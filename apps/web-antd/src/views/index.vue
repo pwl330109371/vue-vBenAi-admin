@@ -9,7 +9,5 @@ import dashboard from './dashboard/analytics/index.vue';
 </script>
 
 <template>
-  <div>
-    <dashboard />
-  </div>
+  <dashboard />
 </template>

@@ -1,59 +1,73 @@
 import type { RequestClient, RequestClientConfig } from '@vben/request';
 
-/**
- * 轻量 HTTP 封装允许在少量场景下扩展一些前端自定义配置。
- */
-export type HttpApiConfig = {
-  /**
-   * 是否静默错误提示。
-   * 用于像退出登录这类“允许失败但不想打断用户”的请求。
-   */
-  ignoreErrorMessage?: boolean;
-} & RequestClientConfig;
+import type { ApiServiceKey, ServiceClientOptions } from './services';
 
 /**
- * 为 RequestClient 生成一层轻量方法封装。
- *
- * 设计目标与 label-center 类似：
- * - 业务侧优先使用 `get/post/put/delete`
- * - 第二个参数直接传常见的 params / data
- * - 第三个参数继续透传底层 RequestClientConfig，保留灵活性
+ * 统一请求配置：通过 service 选择 baseURL 与拦截器策略。
+ * get/delete 使用 params；post/put 使用 data。
  */
-export function createHttpApi(client: RequestClient) {
+export type RequestConfig = {
+  data?: unknown;
+  /** 是否静默错误提示 */
+  ignoreErrorMessage?: boolean;
+  params?: unknown;
+  /** 后端服务标识 */
+  service: ApiServiceKey;
+  /** 用户中心匿名接口不触发登录过期守卫 */
+  skipAuthGuard?: boolean;
+} & Omit<RequestClientConfig, 'data' | 'params'>;
+
+type ServiceClientGetter = (
+  service: ApiServiceKey,
+  options?: ServiceClientOptions,
+) => RequestClient;
+
+function resolveClient(
+  getClient: ServiceClientGetter,
+  config: RequestConfig,
+): RequestClient {
+  return getClient(config.service, {
+    skipAuthGuard: config.skipAuthGuard,
+  });
+}
+
+function toClientConfig(config: RequestConfig): RequestClientConfig {
+  const {
+    service: _service,
+    skipAuthGuard: _skip,
+    data: _data,
+    ...rest
+  } = config;
+  return rest;
+}
+
+export interface AppRequest {
+  delete<T = any>(url: string, config: RequestConfig): Promise<T>;
+  get<T = any>(url: string, config: RequestConfig): Promise<T>;
+  post<T = any>(url: string, config: RequestConfig): Promise<T>;
+  put<T = any>(url: string, config: RequestConfig): Promise<T>;
+}
+
+/**
+ * 创建统一 request API：所有方法签名一致 request.get(url, config)。
+ */
+export function createRequest(getClient: ServiceClientGetter): AppRequest {
   return {
-    delete<T = any>(
-      url: string,
-      params?: unknown,
-      config: HttpApiConfig = {},
-    ): Promise<T> {
-      return client.delete<T>(url, {
-        ...config,
-        params,
-      });
+    delete<T = any>(url: string, config: RequestConfig): Promise<T> {
+      const client = resolveClient(getClient, config);
+      return client.delete<T>(url, toClientConfig(config));
     },
-    get<T = any>(
-      url: string,
-      params?: unknown,
-      config: HttpApiConfig = {},
-    ): Promise<T> {
-      return client.get<T>(url, {
-        ...config,
-        params,
-      });
+    get<T = any>(url: string, config: RequestConfig): Promise<T> {
+      const client = resolveClient(getClient, config);
+      return client.get<T>(url, toClientConfig(config));
     },
-    post<T = any>(
-      url: string,
-      data?: unknown,
-      config: HttpApiConfig = {},
-    ): Promise<T> {
-      return client.post<T>(url, data, config);
+    post<T = any>(url: string, config: RequestConfig): Promise<T> {
+      const client = resolveClient(getClient, config);
+      return client.post<T>(url, config.data, toClientConfig(config));
     },
-    put<T = any>(
-      url: string,
-      data?: unknown,
-      config: HttpApiConfig = {},
-    ): Promise<T> {
-      return client.put<T>(url, data, config);
+    put<T = any>(url: string, config: RequestConfig): Promise<T> {
+      const client = resolveClient(getClient, config);
+      return client.put<T>(url, config.data, toClientConfig(config));
     },
   };
 }

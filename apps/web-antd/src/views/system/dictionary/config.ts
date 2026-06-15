@@ -96,11 +96,13 @@ export function useColumns<T = Dictionary>(
     {
       field: 'dictionaryName',
       minWidth: 180,
+      sortable: true,
       title: '字典名称',
     },
     {
       field: 'dictionaryCode',
       minWidth: 160,
+      sortable: true,
       title: '字典编码',
     },
     {
@@ -108,11 +110,13 @@ export function useColumns<T = Dictionary>(
         name: 'CellTag',
       },
       field: 'useStatus',
+      sortable: true,
       title: '状态',
       width: 120,
     },
     {
       field: 'createTime',
+      sortable: true,
       title: '创建时间',
       width: 180,
     },

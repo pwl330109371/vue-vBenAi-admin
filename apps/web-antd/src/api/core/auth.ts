@@ -1,6 +1,6 @@
 import { useAppConfig } from '@vben/hooks';
 
-import { authApi, feishuApi } from '#/api/request';
+import { request } from '#/api/request';
 
 import { normalizeAccessToken } from './user-center-adapter';
 
@@ -53,9 +53,13 @@ const {
  * 登录
  */
 export async function loginApi(data: AuthApi.LoginParams) {
-  const response = await authApi.post('/auth/loginWithEncode', {
-    ...data,
-    systemId: data.systemId || systemId,
+  const response = await request.post('/auth/loginWithEncode', {
+    service: 'userCenter',
+    skipAuthGuard: true,
+    data: {
+      ...data,
+      systemId: data.systemId || systemId,
+    },
   });
 
   return {
@@ -77,7 +81,9 @@ export async function refreshTokenApi() {
  * 退出登录
  */
 export async function logoutApi() {
-  return authApi.get('/user/logout', undefined, {
+  return request.get('/user/logout', {
+    service: 'userCenter',
+    skipAuthGuard: true,
     // 当前部分联调环境未提供注销接口，失败时不需要额外打断用户。
     ignoreErrorMessage: true,
   });
@@ -94,15 +100,20 @@ export async function getAccessCodesApi() {
  * 获取图形验证码
  */
 export async function getCaptchaApi() {
-  return authApi.get<AuthApi.GetCaptchaResult>('/code');
+  return request.get<AuthApi.GetCaptchaResult>('/code', {
+    service: 'userCenter',
+    skipAuthGuard: true,
+  });
 }
 
 /**
  * 获取短信验证码
  */
 export async function sendSmsCodeApi(mobile: string) {
-  return authApi.get<AuthApi.SmsCodeResult>('/smsCode', {
-    mobile,
+  return request.get<AuthApi.SmsCodeResult>('/smsCode', {
+    service: 'userCenter',
+    skipAuthGuard: true,
+    params: { mobile },
   });
 }
 
@@ -110,9 +121,13 @@ export async function sendSmsCodeApi(mobile: string) {
  * 手机号登录
  */
 export async function mobileLoginApi(data: AuthApi.MobileLoginParams) {
-  const response = await authApi.post('/auth/mobile', {
-    ...data,
-    systemId: data.systemId || systemId,
+  const response = await request.post('/auth/mobile', {
+    service: 'userCenter',
+    skipAuthGuard: true,
+    data: {
+      ...data,
+      systemId: data.systemId || systemId,
+    },
   });
 
   return {
@@ -124,9 +139,12 @@ export async function mobileLoginApi(data: AuthApi.MobileLoginParams) {
  * 飞书应用 access token
  */
 export async function getFeishuAppAccessTokenApi() {
-  return feishuApi.post('/auth/v3/app_access_token/internal', {
-    app_id: auth.feishu?.appId,
-    app_secret: auth.feishu?.appSecret,
+  return request.post('/auth/v3/app_access_token/internal', {
+    service: 'feishu',
+    data: {
+      app_id: auth.feishu?.appId,
+      app_secret: auth.feishu?.appSecret,
+    },
   });
 }
 
@@ -136,13 +154,14 @@ export async function getFeishuAppAccessTokenApi() {
 export async function getFeishuUserAccessTokenApi(code: string) {
   const appAccessToken = await getFeishuAppAccessTokenApi();
 
-  return feishuApi.post<AuthApi.FeishuUserAccessTokenResult>(
+  return request.post<AuthApi.FeishuUserAccessTokenResult>(
     '/authen/v1/oidc/access_token',
     {
-      code,
-      grant_type: 'authorization_code',
-    },
-    {
+      service: 'feishu',
+      data: {
+        code,
+        grant_type: 'authorization_code',
+      },
       headers: {
         Authorization: `Bearer ${appAccessToken.app_access_token}`,
       },
@@ -155,9 +174,13 @@ export async function getFeishuUserAccessTokenApi(code: string) {
  */
 export async function feishuLoginApi(code: string) {
   const { access_token } = await getFeishuUserAccessTokenApi(code);
-  const response = await authApi.post('/auth/feishuLogin', {
-    accessToken: access_token,
-    systemId,
+  const response = await request.post('/auth/feishuLogin', {
+    service: 'userCenter',
+    skipAuthGuard: true,
+    data: {
+      accessToken: access_token,
+      systemId,
+    },
   });
 
   return {

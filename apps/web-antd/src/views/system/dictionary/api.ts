@@ -2,7 +2,7 @@ import type { UserInfo } from '@vben/types';
 
 import { useUserStore } from '@vben/stores';
 
-import { businessApi } from '#/api/request';
+import { request } from '#/api/request';
 
 export namespace SystemDictionaryApi {
   export type UseStatus = 0 | 1;
@@ -271,16 +271,16 @@ function getListTotal<T>(body: UserCenterListBody<T>, fallbackTotal: number) {
 export async function getDictionaryList(
   params: SystemDictionaryApi.DictionaryListQuery,
 ) {
-  const response = await businessApi.get<
+  const response = await request.get<
     UserCenterListBody<SystemDictionaryApi.Dictionary>
-  >(
-    '/qianbao/dictionary',
-    {
+  >('/qianbao/dictionary', {
+    service: 'userCenter',
+    params: {
       ...getOptionalBizParams(),
       ...params,
     },
-    { responseReturn: 'body' },
-  );
+    responseReturn: 'body',
+  });
 
   const items = getListRecords(response).map((item) =>
     normalizeDictionary(item),
@@ -296,11 +296,14 @@ export async function getDictionaryList(
 export async function createDictionary(
   data: SystemDictionaryApi.DictionaryForm,
 ) {
-  return businessApi.post('/qianbao/dictionary', {
-    ...getOptionalBizParams(),
-    ...getOptionalCreator(),
-    ...data,
-    useStatus: String(data.useStatus),
+  return request.post('/qianbao/dictionary', {
+    service: 'userCenter',
+    data: {
+      ...getOptionalBizParams(),
+      ...getOptionalCreator(),
+      ...data,
+      useStatus: String(data.useStatus),
+    },
   });
 }
 
@@ -309,16 +312,19 @@ export async function updateDictionary(
   id: string,
   data: SystemDictionaryApi.DictionaryForm,
 ) {
-  return businessApi.put(`/qianbao/dictionary/${id}`, {
-    ...getOptionalBizParams(),
-    ...data,
-    useStatus: String(data.useStatus),
+  return request.put(`/qianbao/dictionary/${id}`, {
+    service: 'userCenter',
+    data: {
+      ...getOptionalBizParams(),
+      ...data,
+      useStatus: String(data.useStatus),
+    },
   });
 }
 
 /** 删除字典 */
 export async function deleteDictionary(id: string) {
-  return businessApi.delete(`/qianbao/dictionary/${id}`);
+  return request.delete(`/qianbao/dictionary/${id}`, { service: 'userCenter' });
 }
 
 /** 校验字典是否重复 */
@@ -333,33 +339,33 @@ export async function checkDictionaryExists(
     return true;
   }
 
-  return businessApi.get<boolean>(
-    '/qianbao/dictionary/checkDictionaryExisted',
-    {
+  return request.get<boolean>('/qianbao/dictionary/checkDictionaryExisted', {
+    service: 'userCenter',
+    params: {
       ...getOptionalBizParams(),
       ...params,
       ...(dictionaryCode ? { dictionaryCode } : {}),
       ...(dictionaryName ? { dictionaryName } : {}),
     },
-  );
+  });
 }
 
 /** 获取字典项值列表 */
 export async function getDictionaryItemValueList(
   params: SystemDictionaryApi.DictionaryItemValueListQuery,
 ) {
-  const response = await businessApi.get<
+  const response = await request.get<
     UserCenterListBody<SystemDictionaryApi.DictionaryItemValue>
-  >(
-    '/qianbao/dictionary/itemValue',
-    {
+  >('/qianbao/dictionary/itemValue', {
+    service: 'userCenter',
+    params: {
       pageIndex: 1,
       pageSize: 999,
       ...getOptionalBizParams(),
       ...params,
     },
-    { responseReturn: 'body' },
-  );
+    responseReturn: 'body',
+  });
 
   return getListRecords(response).map((item) =>
     normalizeDictionaryItemValue(item),
@@ -370,11 +376,14 @@ export async function getDictionaryItemValueList(
 export async function createDictionaryItemValue(
   data: SystemDictionaryApi.DictionaryItemValueForm,
 ) {
-  return businessApi.post('/qianbao/dictionary/itemValue', {
-    ...getOptionalBizParams(),
-    ...getOptionalCreator(),
-    ...data,
-    useStatus: String(data.useStatus),
+  return request.post('/qianbao/dictionary/itemValue', {
+    service: 'userCenter',
+    data: {
+      ...getOptionalBizParams(),
+      ...getOptionalCreator(),
+      ...data,
+      useStatus: String(data.useStatus),
+    },
   });
 }
 
@@ -383,16 +392,21 @@ export async function updateDictionaryItemValue(
   id: string,
   data: SystemDictionaryApi.DictionaryItemValueForm,
 ) {
-  return businessApi.put(`/qianbao/dictionary/itemValue/${id}`, {
-    ...getOptionalBizParams(),
-    ...data,
-    useStatus: String(data.useStatus),
+  return request.put(`/qianbao/dictionary/itemValue/${id}`, {
+    service: 'userCenter',
+    data: {
+      ...getOptionalBizParams(),
+      ...data,
+      useStatus: String(data.useStatus),
+    },
   });
 }
 
 /** 删除字典项值 */
 export async function deleteDictionaryItemValue(id: string) {
-  return businessApi.delete(`/qianbao/dictionary/itemValue/${id}`);
+  return request.delete(`/qianbao/dictionary/itemValue/${id}`, {
+    service: 'userCenter',
+  });
 }
 
 /** 校验字典项值是否重复 */
@@ -408,14 +422,17 @@ export async function checkDictionaryItemValueExists(
     return true;
   }
 
-  return businessApi.get<boolean>(
+  return request.get<boolean>(
     '/qianbao/dictionary/checkDictionaryItemValueExisted',
     {
-      ...getOptionalBizParams(),
-      ...params,
-      dictionaryCode,
-      ...(itemValue ? { itemValue } : {}),
-      ...(itemValueName ? { itemValueName } : {}),
+      service: 'userCenter',
+      params: {
+        ...getOptionalBizParams(),
+        ...params,
+        dictionaryCode,
+        ...(itemValue ? { itemValue } : {}),
+        ...(itemValueName ? { itemValueName } : {}),
+      },
     },
   );
 }
