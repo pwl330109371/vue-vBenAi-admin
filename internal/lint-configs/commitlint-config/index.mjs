@@ -13,7 +13,27 @@ const allowedScopes = [
   'dev',
   'deploy',
   'other',
+  // Common module scopes used in multi-section commit bodies / IDE templates
+  'api',
+  'auth',
+  'demos',
+  'grid',
+  'http',
+  'system',
+  'view',
+  'web-antd',
 ];
+
+/** Allow package names and short module scopes (e.g. api, grid, @vben/web-antd). */
+function isAllowedScope(scope) {
+  if (!scope) {
+    return true;
+  }
+  if (allowedScopes.includes(scope)) {
+    return true;
+  }
+  return /^@[\w-]+\/[\w.-]+$/.test(scope) || /^[\w][\w.-]*$/.test(scope);
+}
 
 // precomputed scope
 const scopeComplete = execSync('git status --porcelain || true')
@@ -85,20 +105,10 @@ const userConfig = {
   },
   rules: {
     /**
-     * type[scope]: [function] description
-     *
-     * ^^^^^^^^^^^^^^ empty line.
-     * - Something here
+     * Relaxed: allow multi-section bodies without forcing a blank line after header.
      */
-    'body-leading-blank': [2, 'always'],
-    /**
-     * type[scope]: [function] description
-     *
-     * - something here
-     *
-     * ^^^^^^^^^^^^^^
-     */
-    'footer-leading-blank': [1, 'always'],
+    'body-leading-blank': [0],
+    'footer-leading-blank': [0],
     /**
      * type[scope]: [function] description
      *      ^^^^^
@@ -107,18 +117,21 @@ const userConfig = {
       2, // level: error
       'always',
       (parsed) => {
-        if (!parsed.scope || allowedScopes.includes(parsed.scope)) {
+        if (isAllowedScope(parsed.scope)) {
           return [true];
         }
 
-        return [false, `scope must be one of ${allowedScopes.join(', ')}`];
+        return [
+          false,
+          `scope must be a package name, common module (api/grid/system...), or @scope/name`,
+        ];
       },
     ],
     /**
-     * type[scope]: [function] description [No more than 108 characters]
+     * type[scope]: [function] description [No more than 200 characters]
      *      ^^^^^
      */
-    'header-max-length': [2, 'always', 108],
+    'header-max-length': [2, 'always', 200],
 
     'scope-enum': [0],
     'subject-case': [0],
