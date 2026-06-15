@@ -8,7 +8,7 @@ import type {
 import type { VxeGridProps } from './types';
 import type { ViewedRowHelper } from './use-viewed-row';
 
-import { toRaw } from 'vue';
+import { nextTick, toRaw } from 'vue';
 
 import { Store } from '@vben-core/shared/store';
 import {
@@ -117,6 +117,13 @@ export class VxeGridApi<
 
   async query(params: Record<string, any> = {}) {
     try {
+      // 某些抽屉/弹窗场景会在组件刚打开时立即触发查询，此时表格实例可能还未完成挂载。
+      if (typeof this.grid?.commitProxy !== 'function') {
+        await nextTick();
+      }
+      if (typeof this.grid?.commitProxy !== 'function') {
+        return;
+      }
       await this.grid.commitProxy('query', toRaw(params));
     } catch (error) {
       console.error('Error occurred while querying:', error);
@@ -125,6 +132,13 @@ export class VxeGridApi<
 
   async reload(params: Record<string, any> = {}) {
     try {
+      // 重载时也做同样的挂载保护，避免弹窗场景下出现未挂载就调用的报错。
+      if (typeof this.grid?.commitProxy !== 'function') {
+        await nextTick();
+      }
+      if (typeof this.grid?.commitProxy !== 'function') {
+        return;
+      }
       await this.grid.commitProxy('reload', toRaw(params));
     } catch (error) {
       console.error('Error occurred while reloading:', error);

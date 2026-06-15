@@ -61,7 +61,7 @@ const notifications = ref<NotificationItem[]>([
     isRead: false,
     message: '描述信息描述信息描述信息',
     title: '跳转Workspace示例',
-    link: '/workspace',
+    link: '/index',
   },
   {
     id: 6,
@@ -83,43 +83,56 @@ const { isDark } = usePreferences();
 const showDot = computed(() =>
   notifications.value.some((item) => !item.isRead),
 );
+const showDevMenus = import.meta.env.DEV;
 
-const menus = computed(() => [
-  {
-    handler: () => {
-      router.push({ name: 'Profile' });
+const description = computed(() => {
+  return userStore.userInfo?.username || userStore.userInfo?.realName || '';
+});
+
+const menus = computed(() => {
+  const items = [
+    {
+      handler: () => {
+        router.push({ name: 'Profile' });
+      },
+      icon: 'lucide:user',
+      text: '个人中心',
     },
-    icon: 'lucide:user',
-    text: '个人中心',
-  },
-  {
-    handler: () => {
-      openWindow(VBEN_DOC_URL, {
-        target: '_blank',
-      });
-    },
-    icon: BookOpenText,
-    text: '文档',
-  },
-  {
-    handler: () => {
-      openWindow(VBEN_GITHUB_URL, {
-        target: '_blank',
-      });
-    },
-    icon: SvgGithubIcon,
-    text: 'GitHub',
-  },
-  {
-    handler: () => {
-      openWindow(`${VBEN_GITHUB_URL}/issues`, {
-        target: '_blank',
-      });
-    },
-    icon: CircleHelp,
-    text: '问答',
-  },
-]);
+    ...(showDevMenus
+      ? [
+          {
+            handler: () => {
+              openWindow(VBEN_DOC_URL, {
+                target: '_blank',
+              });
+            },
+            icon: BookOpenText,
+            text: '文档',
+          },
+          {
+            handler: () => {
+              openWindow(VBEN_GITHUB_URL, {
+                target: '_blank',
+              });
+            },
+            icon: SvgGithubIcon,
+            text: 'GitHub',
+          },
+          {
+            handler: () => {
+              openWindow(`${VBEN_GITHUB_URL}/issues`, {
+                target: '_blank',
+              });
+            },
+            icon: CircleHelp,
+            text: '问答',
+          },
+        ]
+      : []),
+  ];
+
+  return items;
+});
 
 const avatar = computed(() => {
   return userStore.userInfo?.avatar ?? preferences.app.defaultAvatar;
@@ -220,10 +233,9 @@ watch(
     <template #user-dropdown>
       <UserDropdown
         :avatar
+        :description="description"
         :menus
         :text="userStore.userInfo?.realName"
-        description="ann.vben@gmail.com"
-        tag-text="Pro"
         @logout="handleLogout"
       />
     </template>

@@ -27,8 +27,8 @@
   },
   "dependencies": {
     "@vben-core/menu-ui": "workspace:*",
-    "@vben/business": "workspace:*",
     "@vben/access": "workspace:*",
+    "@vben/business": "workspace:*",
     "@vben/common-ui": "workspace:*",
     "@vben/constants": "workspace:*",
     "@vben/hooks": "workspace:*",
@@ -44,6 +44,7 @@
     "@vben/utils": "workspace:*",
     "@vueuse/core": "catalog:",
     "ant-design-vue": "catalog:",
+    "crypto-js": "catalog:",
     "dayjs": "catalog:",
     "pinia": "catalog:",
     "vue": "catalog:",

@@ -90,6 +90,18 @@ const coreRoutes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    component: () => import('#/views/_core/authentication/feishu-redirect.vue'),
+    meta: {
+      hideInBreadcrumb: true,
+      hideInMenu: true,
+      hideInTab: true,
+      ignoreAccess: true,
+      title: '飞书登录回调',
+    },
+    name: 'FeishuRedirect',
+    path: '/lark-redirect',
+  },
 ];
 
 export { coreRoutes, fallbackNotFoundRoute };

@@ -19,16 +19,43 @@ export function useAppConfig(
     VITE_GLOB_API_URL,
     VITE_GLOB_AUTH_DINGDING_CORP_ID,
     VITE_GLOB_AUTH_DINGDING_CLIENT_ID,
+    VITE_GLOB_FEISHU_APP_ID,
+    VITE_GLOB_FEISHU_APP_SECRET,
+    VITE_GLOB_FEISHU_OPEN_API_URL,
+    VITE_GLOB_FEISHU_REDIRECT_URL,
+    VITE_GLOB_USER_CENTER_API_URL,
+    VITE_GLOB_USER_CENTER_CHANNEL,
+    VITE_GLOB_USER_CENTER_LOGIN_AES_KEY,
+    VITE_GLOB_USER_CENTER_SYSTEM_ID,
   } = config;
 
   const applicationConfig: ApplicationConfig = {
     apiURL: VITE_GLOB_API_URL,
     auth: {},
+    userCenter: {
+      apiURL: VITE_GLOB_USER_CENTER_API_URL || VITE_GLOB_API_URL,
+      channel: VITE_GLOB_USER_CENTER_CHANNEL || 'web',
+      loginAesKey: VITE_GLOB_USER_CENTER_LOGIN_AES_KEY || 'GViX2lkr7oQNS9tK',
+      systemId: VITE_GLOB_USER_CENTER_SYSTEM_ID || '',
+    },
   };
   if (VITE_GLOB_AUTH_DINGDING_CORP_ID && VITE_GLOB_AUTH_DINGDING_CLIENT_ID) {
     applicationConfig.auth.dingding = {
       clientId: VITE_GLOB_AUTH_DINGDING_CLIENT_ID,
       corpId: VITE_GLOB_AUTH_DINGDING_CORP_ID,
+    };
+  }
+  if (
+    VITE_GLOB_FEISHU_APP_ID &&
+    VITE_GLOB_FEISHU_APP_SECRET &&
+    VITE_GLOB_FEISHU_REDIRECT_URL
+  ) {
+    applicationConfig.auth.feishu = {
+      appId: VITE_GLOB_FEISHU_APP_ID,
+      appSecret: VITE_GLOB_FEISHU_APP_SECRET,
+      openApiURL:
+        VITE_GLOB_FEISHU_OPEN_API_URL || 'https://open.feishu.cn/open-apis',
+      redirectURL: VITE_GLOB_FEISHU_REDIRECT_URL,
     };
   }
 

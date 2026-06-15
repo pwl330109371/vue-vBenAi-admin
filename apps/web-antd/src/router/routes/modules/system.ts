@@ -46,6 +46,15 @@ const routes: RouteRecordRaw[] = [
         },
         component: () => import('#/views/system/dept/index.vue'),
       },
+      {
+        path: '/system/dictionary',
+        name: 'SystemDictionary',
+        meta: {
+          icon: 'mdi:book-open-page-variant',
+          title: '数据字典',
+        },
+        component: () => import('#/views/system/dictionary/index.vue'),
+      },
     ],
   },
 ];

@@ -19,6 +19,8 @@ async function generateAccess(options: GenerateMenuAndRoutesOptions) {
   const layoutMap: ComponentRecordType = {
     BasicLayout,
     IFrameView,
+    // Ruoyi / Element-Admin backend menu convention
+    Layout: BasicLayout,
   };
 
   return await generateAccessible(preferences.app.accessMode, {

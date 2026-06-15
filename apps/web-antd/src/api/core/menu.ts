@@ -1,10 +1,24 @@
 import type { RouteRecordStringComponent } from '@vben/types';
 
-import { requestClient } from '#/api/request';
+import type { UserCenterRawMenuRoute } from './user-center-adapter';
+
+import { useAppConfig } from '@vben/hooks';
+
+import { businessApi } from '#/api/request';
+
+import { normalizeMenuRoutes } from './user-center-adapter';
+
+const {
+  userCenter: { systemId },
+} = useAppConfig(import.meta.env, import.meta.env.PROD);
 
 /**
  * 获取用户所有菜单
  */
 export async function getAllMenusApi() {
-  return requestClient.get<RouteRecordStringComponent[]>('/menu/all');
+  const routes = await businessApi.get<UserCenterRawMenuRoute[]>(
+    `/server/menu/getRouters/${systemId}`,
+  );
+
+  return normalizeMenuRoutes(routes) as RouteRecordStringComponent[];
 }

@@ -20,8 +20,13 @@ export const overridesPreferences = defineOverridesPreferences({
   app: {
     /** 生产环境使用后端驱动菜单与路由，开发期可配合 backend-mock */
     accessMode: 'backend',
+    defaultHomePath: '/index',
+    loginExpiredMode: 'page',
     locale: 'zh-CN',
     name: import.meta.env.VITE_APP_TITLE,
+  },
+  theme: {
+    mode: 'light',
   },
   widget: {
     languageToggle: false,
